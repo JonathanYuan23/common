@@ -7,6 +7,8 @@ import dronekit
 
 from . import drone_odometry
 
+MAVLINK_LANDING_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL
+MAVLINK_LANDING_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_LAND
 
 class FlightController:
     """
@@ -101,3 +103,36 @@ class FlightController:
             return False, None
 
         return True, location
+
+    def create_land_command(self, latitude: float, longitude: float) -> "dronekit.Command":
+        """
+        Given a target latitude and longitude, returns a dronekit landing command
+
+        Parameters
+        ----------
+        latitude: float
+        longitude: float
+
+        Returns
+        -------
+        dronekit.Command
+        """
+        landing_command = dronekit.Command(
+            0,
+            0,
+            0,
+            MAVLINK_LANDING_FRAME,
+            MAVLINK_LANDING_COMMAND,
+            0,
+            0,
+            0,  # param1
+            0,
+            0,
+            0,
+            latitude,
+            longitude,
+            0,
+        )
+
+        return landing_command
+    
